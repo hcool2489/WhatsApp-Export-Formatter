@@ -89,7 +89,7 @@
 </div>
 		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 		<script>
-			data_length = 30;
+			data_length = 500;
 			function process(res){
 				res = res.split('\n');
 				jsonData = [];
@@ -190,13 +190,13 @@
 						if(nowtop < data_length)
 							updateHTML(0,data_length);
 						else
-							updateHTML(nowtop-data_length,nowtop+10);
+							updateHTML(nowtop-data_length,bottom-data_length);
 					}
 					if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
 						if(jsonData.length-bottom < data_length)
 							updateHTML(jsonData.length-20,jsonData.length);
 						else
-							updateHTML(bottom-10,bottom+data_length);
+							updateHTML(newtop+data_length,bottom+data_length);
 					}
 				})
 			});
