@@ -87,7 +87,9 @@
     </div>
   </div>
 </div>
+		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 		<script>
+			data_length = 30;
 			function process(res){
 				res = res.split('\n');
 				jsonData = [];
@@ -129,7 +131,8 @@
 				document.getElementById("userForm").innerHTML = u;
 			}
 			
-			function format(firstUser){
+			function format(fu){
+				firstUser = fu;
 				document.getElementById("hide").style.display = "none";
 				document.getElementsByClassName("page")[0].style.display = "block";
 				for(i=0;i<users.length;i++){
@@ -138,16 +141,18 @@
 					else
 						document.getElementsByClassName('name')[0].innerHTML = "<span>" + users[i] + "</span>";
 				}
-				updateHTML(0,20);
+				updateHTML(0,data_length);
 			}
 			
 			function updateHTML(start,last){
-				var html = '<div class="datechange">' + jsonData[0].month + '/' + jsonData[0].day + jsonData[0].year + '</div>';
-				var lastdate = new Date(jsonData[0].month + '/' + jsonData[0].day + '/20' + jsonData[0].year + " 23:59:59");
+				nowtop = start;
+				bottom = last;
+				var html = '<div class="datechange">' + jsonData[start].month + ' / ' + jsonData[start].day + ' / ' + jsonData[start].year + '</div>';
+				var lastdate = new Date(jsonData[start].month + '/' + jsonData[start].day + '/20' + jsonData[start].year + " 23:59:59");
 				for(i=start;i<last;i++){
-					var newdate = new Date(jsonData[0].month + '/' + jsonData[0].day + '/20' + jsonData[0].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
+					var newdate = new Date(jsonData[start].month + '/' + jsonData[start].day + '/20' + jsonData[start].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
 					if(newdate > lastdate){
-						html += '<div class="datechange">' + jsonData[i].month + '/' + jsonData[i].day + jsonData[i].year + '</div>';
+						html += '<div class="datechange">' + jsonData[i].month + ' / ' + jsonData[i].day + ' / ' + jsonData[i].year + '</div>';
 						lastdate = new Date(jsonData[i].month + '/' + jsonData[i].day + '/20' + jsonData[i].year + " 23:59:59");
 					}
 					if(jsonData[i].sender == "info")
@@ -177,6 +182,25 @@
 					reader.readAsText(file, "UTF-8");
 				}
 			},false);
+			
+			
+			jQuery(function($) {
+				$('.conversation-container').on('scroll', function() {
+					alert($(this).innerHeight());
+					if($(this).scrollTop() == 0 && nowtop != 0) {
+						if(nowtop < data_length)
+							updateHTML(0,data_length);
+						else
+							updateHTML(nowtop-data_length,bottom-data_length);
+					}
+					if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
+						if(jsonData.length-bottom < data_length)
+							updateHTML(jsonData.length-20,jsonData.length);
+						else
+							updateHTML(nowtop+data_length,bottom+data_length);
+					}
+				})
+			});
 		</script>
 	</body>
 </html>
