@@ -138,10 +138,13 @@
 					else
 						document.getElementsByClassName('name')[0].innerHTML = "<span>" + users[i] + "</span>";
 				}
-				
+				updateHTML(0,20);
+			}
+			
+			function updateHTML(start,last){
 				var html = '<div class="datechange">' + jsonData[0].month + '/' + jsonData[0].day + jsonData[0].year + '</div>';
 				var lastdate = new Date(jsonData[0].month + '/' + jsonData[0].day + '/20' + jsonData[0].year + " 23:59:59");
-				for(i=0;i<jsonData.length;i++){
+				for(i=start;i<last;i++){
 					var newdate = new Date(jsonData[0].month + '/' + jsonData[0].day + '/20' + jsonData[0].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
 					if(newdate > lastdate){
 						html += '<div class="datechange">' + jsonData[i].month + '/' + jsonData[i].day + jsonData[i].year + '</div>';
