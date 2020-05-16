@@ -186,18 +186,17 @@
 			
 			jQuery(function($) {
 				$('.conversation-container').on('scroll', function() {
-					alert($(this).innerHeight());
 					if($(this).scrollTop() == 0 && nowtop != 0) {
 						if(nowtop < data_length)
 							updateHTML(0,data_length);
 						else
-							updateHTML(nowtop-data_length,bottom-data_length);
+							updateHTML(nowtop-data_length,nowtop+10);
 					}
 					if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
 						if(jsonData.length-bottom < data_length)
 							updateHTML(jsonData.length-20,jsonData.length);
 						else
-							updateHTML(nowtop+data_length,bottom+data_length);
+							updateHTML(bottom-10,bottom+data_length);
 					}
 				})
 			});
