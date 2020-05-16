@@ -187,18 +187,18 @@
 			jQuery(function($) {
 				$('.conversation-container').on('scroll', function() {
 					if($(this).scrollTop() == 0 && nowtop != 0) {
-						document.documentElement.scrollTop = $(this).innerHeight()-1;
+						document.getElementsByClassName('conversation-container')[0].scrollTop = $(this)[0].scrollHeight-1;
 						if(nowtop < data_length)
 							updateHTML(0,data_length);
 						else
-							updateHTML(nowtop-data_length,bottom-data_length);
+							updateHTML(nowtop-data_length,bottom-data_length+20);
 					}
 					if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
-						document.documentElement.scrollTop = 1;
+						document.getElementsByClassName('conversation-container')[0].scrollTop = 1;
 						if(jsonData.length-bottom < data_length)
 							updateHTML(jsonData.length-20,jsonData.length);
 						else
-							updateHTML(nowtop+data_length,bottom+data_length);
+							updateHTML(nowtop+data_length-20,bottom+data_length);
 					}
 				})
 			});
