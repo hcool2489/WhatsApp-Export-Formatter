@@ -207,16 +207,17 @@
 			jQuery(function($) {
 				var lastScrollTop = 0;
 				$(document.getElementsByClassName('conversation-container')[0]).scroll(function(event){
-				   var st = $(this).scrollTop();
-				   if (st > lastScrollTop){
+					var st = $(this).scrollTop();
+					if (st > lastScrollTop){
 					   // downscroll code
 					   console.log('down');
-					   msg_append();
-				   } else {
+						for(var k=0k<st-lastScrollTop;k++)
+							msg_append();
+					} else {
 					  // upscroll code
 					  console.log('up');
-				   }
-				   lastScrollTop = st;
+					}
+					lastScrollTop = st;
 				});
 			});
 		</script>
