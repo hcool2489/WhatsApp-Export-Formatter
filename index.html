@@ -187,21 +187,20 @@
 			jQuery(function($) {
 				$('.conversation-container').on('scroll', function() {
 					if($(this).scrollTop() == 0 && nowtop != 0) {
-						//document.getElementsByClassName('conversation-container')[0].scrollTop = $(this)[0].scrollHeight + $(this).innerHeight() - 1;
-						document.getElementsByClassName('conversation-container')[0].scrollTo(0,document.getElementsByClassName('conversation-container')[0].scrollHeight);
+						document.getElementsByClassName('conversation-container')[0].scrollTop = $(this)[0].scrollHeight- 1;
 						console.log("top");
 						if(nowtop < data_length)
 							updateHTML(0,data_length);
 						else
 							updateHTML(nowtop-data_length,bottom-data_length+4);
 					}
-					if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
+					else if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
 						document.getElementsByClassName('conversation-container')[0].scrollTop = 1;
 						console.log("bottom");
 						if(jsonData.length-bottom < data_length)
 							updateHTML(jsonData.length-data_length,jsonData.length);
 						else
-							updateHTML(nowtop+data_length-2,bottom+data_length);
+							updateHTML(nowtop+data_length-4,bottom+data_length);
 					}
 				})
 			});
