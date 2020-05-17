@@ -167,6 +167,9 @@
 			
 			function msg_append(){
 				if(bottom+1 != jsonData.length){
+					nowtop++;
+					if(nowtop>data_length)
+						$('.conversation-container div:first-child').remove();
 					var html = '';
 					var newdate = new Date(jsonData[bottom].month + '/' + jsonData[bottom].day + '/20' + jsonData[bottom].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
 					bottom++;
@@ -182,6 +185,29 @@
 						html += '<div class="message received">' + jsonData[bottom].message + '<span class="metadata"><span class="time">' + jsonData[bottom].hour + ':' + jsonData[
 						bottom].minute +' ' + jsonData[bottom].meridiem + '</span></span></div>';
 					$('.conversation-container').append(html);
+				}
+			}
+			
+			function msg_prepend(){
+				if(nowtop != 0){
+					bottom--;
+					if(jsonData.length-bottom>data_length)
+						$('.conversation-container div:last-child').remove();
+					var html = '';
+					var newdate = new Date(jsonData[nowtop].month + '/' + jsonData[nowtop].day + '/20' + jsonData[nowtop].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
+					nowtop--;
+					if(newdate > lastdate){
+						html += '<div class="datechange">' + jsonData[nowtop].month + ' / ' + jsonData[nowtop].day + ' / ' + jsonData[nowtop].year + '</div>';
+						lastdate = new Date(jsonData[nowtop].month + '/' + jsonData[nowtop].day + '/20' + jsonData[nowtop].year + " 23:59:59");
+					}
+					if(jsonData[nowtop].sender == "info")
+						html += '<div class="infomsg">🔒' + jsonData[nowtop].message + '</div>';
+					else if(jsonData[nowtop].sender == firstUser)
+						html += '<div class="message sent">' + jsonData[nowtop].message + '<span class="metadata"><span class="time">' + jsonData[nowtop].hour + ':' + jsonData[nowtop].minute +' ' + jsonData[nowtop].meridiem + '</span></span></div>';
+					else
+						html += '<div class="message received">' + jsonData[nowtop].message + '<span class="metadata"><span class="time">' + jsonData[nowtop].hour + ':' + jsonData[
+						nowtop].minute +' ' + jsonData[nowtop].meridiem + '</span></span></div>';
+					$('.conversation-container').prepend(html);
 				}
 			}
 			
@@ -208,15 +234,12 @@
 				var lastScrollTop = 0;
 				$(document.getElementsByClassName('conversation-container')[0]).scroll(function(event){
 					var st = $(this).scrollTop();
-					if (st > lastScrollTop){
-					   // downscroll code
-					   console.log('down');
-						for(var k=0k<st-lastScrollTop;k++)
+					if ((st-lastScrollTop)/39>0)
+						for(var k=0;k<(st-lastScrollTop)/40;k++)
 							msg_append();
-					} else {
-					  // upscroll code
-					  console.log('up');
-					}
+					else
+						for(var k=0;k<(st-lastScrollTop)/40;k++)
+							msg_prepend();
 					lastScrollTop = st;
 				});
 			});
