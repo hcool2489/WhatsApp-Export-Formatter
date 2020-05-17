@@ -89,7 +89,7 @@
 </div>
 		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 		<script>
-			data_length = 100;
+			data_length = 10;
 			function process(res){
 				res = res.split('\n');
 				jsonData = [];
@@ -148,7 +148,7 @@
 				nowtop = start;
 				bottom = last;
 				var html = '<div class="datechange">' + jsonData[start].month + ' / ' + jsonData[start].day + ' / ' + jsonData[start].year + '</div>';
-				var lastdate = new Date(jsonData[start].month + '/' + jsonData[start].day + '/20' + jsonData[start].year + " 23:59:59");
+				lastdate = new Date(jsonData[start].month + '/' + jsonData[start].day + '/20' + jsonData[start].year + " 23:59:59");
 				for(i=start;i<last;i++){
 					var newdate = new Date(jsonData[start].month + '/' + jsonData[start].day + '/20' + jsonData[start].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
 					if(newdate > lastdate){
@@ -163,6 +163,26 @@
 						html += '<div class="message received">' + jsonData[i].message + '<span class="metadata"><span class="time">' + jsonData[i].hour + ':' + jsonData[i].minute +' ' + jsonData[i].meridiem + '</span></span></div>';
 				}
 				document.getElementsByClassName('conversation-container')[0].innerHTML = html;
+			}
+			
+			function msg_append(){
+				if(bottom+1 != jsonData.length){
+					var html = '';
+					var newdate = new Date(jsonData[bottom].month + '/' + jsonData[bottom].day + '/20' + jsonData[bottom].year + " " + jsonData.hour + ":" + jsonData.minute + ":00");
+					bottom++;
+					if(newdate > lastdate){
+						html += '<div class="datechange">' + jsonData[bottom].month + ' / ' + jsonData[bottom].day + ' / ' + jsonData[bottom].year + '</div>';
+						lastdate = new Date(jsonData[bottom].month + '/' + jsonData[bottom].day + '/20' + jsonData[bottom].year + " 23:59:59");
+					}
+					if(jsonData[bottom].sender == "info")
+						html += '<div class="infomsg">🔒' + jsonData[bottom].message + '</div>';
+					else if(jsonData[bottom].sender == firstUser)
+						html += '<div class="message sent">' + jsonData[bottom].message + '<span class="metadata"><span class="time">' + jsonData[bottom].hour + ':' + jsonData[bottom].minute +' ' + jsonData[bottom].meridiem + '</span></span></div>';
+					else
+						html += '<div class="message received">' + jsonData[bottom].message + '<span class="metadata"><span class="time">' + jsonData[bottom].hour + ':' + jsonData[
+						bottom].minute +' ' + jsonData[bottom].meridiem + '</span></span></div>';
+					$('.conversation-container').append(html);
+				}
 			}
 			
 			document.getElementById("filetoRead").addEventListener("change",function(){
@@ -185,24 +205,19 @@
 			
 			
 			jQuery(function($) {
-				$('.conversation-container').on('scroll', function() {
-					if($(this).scrollTop() == 0 && nowtop != 0) {
-						document.getElementsByClassName('conversation-container')[0].scrollTop = $(this)[0].scrollHeight- 1;
-						console.log("top");
-						if(nowtop < data_length)
-							updateHTML(0,data_length);
-						else
-							updateHTML(nowtop-data_length,bottom-data_length+4);
-					}
-					else if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
-						document.getElementsByClassName('conversation-container')[0].scrollTop = 1;
-						console.log("bottom");
-						if(jsonData.length-bottom < data_length)
-							updateHTML(jsonData.length-data_length,jsonData.length);
-						else
-							updateHTML(nowtop+data_length-4,bottom+data_length);
-					}
-				})
+				var lastScrollTop = 0;
+				$(document.getElementsByClassName('conversation-container')[0]).scroll(function(event){
+				   var st = $(this).scrollTop();
+				   if (st > lastScrollTop){
+					   // downscroll code
+					   console.log('down');
+					   msg_append();
+				   } else {
+					  // upscroll code
+					  console.log('up');
+				   }
+				   lastScrollTop = st;
+				});
 			});
 		</script>
 	</body>
