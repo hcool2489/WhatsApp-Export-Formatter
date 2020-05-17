@@ -89,7 +89,7 @@
 </div>
 		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 		<script>
-			data_length = 500;
+			data_length = 10;
 			function process(res){
 				res = res.split('\n');
 				jsonData = [];
@@ -187,20 +187,21 @@
 			jQuery(function($) {
 				$('.conversation-container').on('scroll', function() {
 					if($(this).scrollTop() == 0 && nowtop != 0) {
-						document.getElementsByClassName('conversation-container')[0].scrollTop = $(this)[0].scrollHeight + $(this).innerHeight();
+						//document.getElementsByClassName('conversation-container')[0].scrollTop = $(this)[0].scrollHeight + $(this).innerHeight() - 1;
+						document.getElementsByClassName('conversation-container')[0].scrollTo(0,document.getElementsByClassName('conversation-container')[0].scrollHeight);
 						console.log("top");
 						if(nowtop < data_length)
 							updateHTML(0,data_length);
 						else
-							updateHTML(nowtop-data_length,bottom-data_length+20);
+							updateHTML(nowtop-data_length,bottom-data_length+4);
 					}
 					if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && bottom != jsonData.length) {
-						document.getElementsByClassName('conversation-container')[0].scrollTop = 0;
+						document.getElementsByClassName('conversation-container')[0].scrollTop = 1;
 						console.log("bottom");
 						if(jsonData.length-bottom < data_length)
-							updateHTML(jsonData.length-20,jsonData.length);
+							updateHTML(jsonData.length-data_length,jsonData.length);
 						else
-							updateHTML(nowtop+data_length-20,bottom+data_length);
+							updateHTML(nowtop+data_length-2,bottom+data_length);
 					}
 				})
 			});
